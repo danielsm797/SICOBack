@@ -22,6 +22,7 @@ namespace SICOBack.Controllers
             {
                 return NotFound();
             }
+
             return await _context.TblEstudiantes.ToListAsync();
         }
 
@@ -58,5 +59,23 @@ namespace SICOBack.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<IEnumerable<TblCurso>> GetTblCursoByStudent(int id)
+        {
+            try
+            {
+                var cursos = (from x in _context.TblCursoXestudiantes
+                              join y in _context.TblCursos on x.IdCurso equals y.IdCurso
+                              where x.IdEstudiante == id
+                              select y).ToList();
+
+                return cursos;
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        } 
     }
 }

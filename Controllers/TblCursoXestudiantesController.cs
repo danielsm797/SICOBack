@@ -13,12 +13,7 @@ namespace SICOBack.Controllers
     [ApiController]
     public class TblCursoXestudiantesController : ControllerBase
     {
-        private readonly SicoDbContext _context;
-
-        public TblCursoXestudiantesController(SicoDbContext context)
-        {
-            _context = context;
-        }
+        private readonly SicoDbContext _context = new();
 
         [HttpPost]
         public async Task<ActionResult<int>> PostTblCursoXestudiante(TblCursoXestudiante tblCursoXestudiante)
@@ -26,6 +21,18 @@ namespace SICOBack.Controllers
             if (_context.TblCursoXestudiantes == null)
             {
                 return Problem("Entity set 'SicoDbContext.TblCursoXestudiantes'  is null.");
+            }
+
+            // Validamos que el curso no se encuentre asignado al mismo estudiante
+
+            var curso = _context
+                .TblCursoXestudiantes
+                .Where(x => x.IdCurso == tblCursoXestudiante.IdCurso && x.IdEstudiante == tblCursoXestudiante.IdEstudiante)
+                .ToList();
+    
+            if (curso.Count > 0)
+            {
+                return Problem("El estudiante ya cuenta con este curso asignado");
             }
 
             _context.TblCursoXestudiantes.Add(tblCursoXestudiante);

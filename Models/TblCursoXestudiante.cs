@@ -10,8 +10,4 @@ public partial class TblCursoXestudiante
     public int? IdEstudiante { get; set; }
 
     public int? IdCurso { get; set; }
-
-    public virtual TblCurso? IdCursoNavigation { get; set; }
-
-    public virtual TblEstudiante? IdEstudianteNavigation { get; set; }
 }

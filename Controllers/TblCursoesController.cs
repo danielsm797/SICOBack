@@ -58,5 +58,26 @@ namespace SICOBack.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("{idEstudiante}")]
+        public async Task<ActionResult<IEnumerable<TblCurso>>> GetTblCursosAvailable(int idEstudiante)
+        {
+            try
+            {
+                var cursos = await (from x in _context.TblCursos
+                              join y in _context.TblCursoXestudiantes.Where(x => x.IdEstudiante == idEstudiante) 
+                                on x.IdCurso equals y.IdCurso into z
+                              from y in z.DefaultIfEmpty()
+                              where y == null
+                              select x
+                 ).ToListAsync();
+
+                return cursos;
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
     }
 }
