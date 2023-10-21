@@ -2,9 +2,25 @@ using SICOBack.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add cors
+
+var origins = "origins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: origins, policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -23,5 +39,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(origins);
 
 app.Run();

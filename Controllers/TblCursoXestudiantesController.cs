@@ -9,7 +9,7 @@ using SICOBack.Models;
 
 namespace SICOBack.Controllers
 {
-    [Route("api/cursosXEstudiante")]
+    [Route("api/cursoXEstudiante")]
     [ApiController]
     public class TblCursoXestudiantesController : ControllerBase
     {
@@ -38,7 +38,7 @@ namespace SICOBack.Controllers
             _context.TblCursoXestudiantes.Add(tblCursoXestudiante);
             await _context.SaveChangesAsync();
 
-            return tblCursoXestudiante.IdCursoXestudiante;
+            return Ok(tblCursoXestudiante.IdCursoXestudiante);
         }
 
         [HttpDelete("{id}")]
@@ -56,9 +56,9 @@ namespace SICOBack.Controllers
             }
 
             _context.TblCursoXestudiantes.Remove(tblCursoXestudiante);
-            await _context.SaveChangesAsync();
+            int response = await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(response);
         }
     }
 }

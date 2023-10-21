@@ -36,7 +36,7 @@ namespace SICOBack.Controllers
             _context.TblCursos.Add(tblCurso);
             await _context.SaveChangesAsync();
 
-            return tblCurso.IdCurso;
+            return Ok(tblCurso.IdCurso);
         }
 
         [HttpDelete("{id}")]
@@ -72,7 +72,7 @@ namespace SICOBack.Controllers
                               select x
                  ).ToListAsync();
 
-                return cursos;
+                return Ok(cursos);
             }
             catch (Exception ex)
             {

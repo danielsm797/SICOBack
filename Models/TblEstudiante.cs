@@ -18,4 +18,6 @@ public partial class TblEstudiante
     public string StrSegundoApellido { get; set; } = null!;
 
     public DateTime? DtmFechaCreacion { get; set; }
+
+    public string StrEmail { get; set; } = null!;
 }

@@ -66,6 +66,10 @@ public partial class SicoDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("dtmFechaCreacion");
+            entity.Property(e => e.StrEmail)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("strEmail");
             entity.Property(e => e.StrIdentificacion)
                 .HasMaxLength(12)
                 .IsUnicode(false)

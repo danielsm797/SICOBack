@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SICOBack.Classes;
 using SICOBack.Models;
 
 namespace SICOBack.Controllers
@@ -37,7 +38,7 @@ namespace SICOBack.Controllers
             _context.TblEstudiantes.Add(tblEstudiante);
             await _context.SaveChangesAsync();
 
-            return tblEstudiante.IdEstudiante;
+            return Ok(tblEstudiante.IdEstudiante);
         }
         
         [HttpDelete("{id}")]
@@ -61,16 +62,22 @@ namespace SICOBack.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<TblCurso>> GetTblCursoByStudent(int id)
+        public ActionResult<IEnumerable<CursoXEstudiante>> GetTblCursoByStudent(int id)
         {
             try
             {
                 var cursos = (from x in _context.TblCursoXestudiantes
                               join y in _context.TblCursos on x.IdCurso equals y.IdCurso
                               where x.IdEstudiante == id
-                              select y).ToList();
+                              select new
+                              {
+                                  idCursoXEstudiante = x.IdCursoXestudiante,
+                                  idCurso = y.IdCurso,
+                                  strNombre = y.StrNombre,
+                                  dtmFechaCreacion = y.DtmFechaCreacion
+                              }).ToList();
 
-                return cursos;
+                return Ok(cursos);
             }
             catch (Exception ex)
             {
