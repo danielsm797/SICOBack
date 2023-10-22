@@ -49,6 +49,18 @@ namespace SICOBack.Controllers
                 return NotFound();
             }
 
+            // Eliminamos los cursos por estudiante
+
+            var cursosXEstudiante = (from x in _context.TblCursoXestudiantes
+             where x.IdEstudiante == id
+             select x).ToList();
+
+            if (cursosXEstudiante.Count > 0)
+            {
+                _context.TblCursoXestudiantes.RemoveRange(cursosXEstudiante);
+                await _context.SaveChangesAsync();
+            }
+
             var tblEstudiante = await _context.TblEstudiantes.FindAsync(id);
             if (tblEstudiante == null)
             {
@@ -57,6 +69,37 @@ namespace SICOBack.Controllers
 
             _context.TblEstudiantes.Remove(tblEstudiante);
             await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTblEstudiante(int id, TblEstudiante tblEstudiante)
+        {
+            if (id != tblEstudiante.IdEstudiante)
+            {
+                return BadRequest();
+            }
+
+            tblEstudiante.DtmFechaCreacion = DateTime.Now;
+
+            _context.Entry(tblEstudiante).State = EntityState.Modified;
+
+            try
+            {         
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TblEstudianteExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -83,6 +126,11 @@ namespace SICOBack.Controllers
             {
                 return Problem(ex.Message);
             }
-        } 
+        }
+
+        private bool TblEstudianteExists(int id)
+        {
+            return (_context.TblEstudiantes?.Any(e => e.IdEstudiante == id)).GetValueOrDefault();
+        }
     }
 }
